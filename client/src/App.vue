@@ -2,10 +2,10 @@
   <div>
     <Loader v-if="isLoading" />
     <div class="container p-4">
+        <div>
+            <h3>Найкращі ціни на продукти, станом {{ dateNow }}</h3>
+        </div>
       <div class="row">
-          <div>
-              <h3>Найкращі ціни на продукти, станом {{ dateNow }}</h3>
-          </div>
         <div class="col-sm-4 col-md-3">
           <form>
             <div class="well pb-4">
