@@ -3,6 +3,9 @@
     <Loader v-if="isLoading" />
     <div class="container p-4">
       <div class="row">
+          <div>
+              <h3>Найкращі ціни на продукти, станом {{ dateNow }}</h3>
+          </div>
         <div class="col-sm-4 col-md-3">
           <form>
             <div class="well pb-4">
@@ -296,50 +299,32 @@
 <script>
 import Loader from "./Loader";
 export default {
-  name: "App",
-  components: {
-    Loader,
-  },
-  data: () => ({
-    products: [],
-    isLoading: true,
-  }),
-  async mounted() {
-    const responseBefore = await fetch("http://localhost:3333/api/products");
-    const response = await responseBefore.json();
-    this.products = response.products;
-    // this.sortProducts();
-    // this.filterProducts();
-    this.isLoading = false;
-  },
-  methods: {
-    sortProducts() {
-      this.products.sort(function (a, b) {
-        if (Number(a.pricePerGramm) < Number(b.pricePerGramm)) {
-          return -1;
-        }
-        if (Number(a.pricePerGramm) > Number(b.pricePerGramm)) {
-          return 1;
-        }
-        return 0;
-      });
+    name: "App",
+    components: {
+        Loader,
     },
-  },
-  computed: {
-    topProduct() {
-      return this.products[0];
+    data: () => ({
+        products: [],
+        isLoading: true,
+    }),
+    async mounted() {
+        const responseBefore = await fetch("http://localhost:3333/api/products");
+        const response = await responseBefore.json();
+        this.products = response.products;
+        this.isLoading = false;
     },
-    topThreeProducts() {
-      return this.products.slice(0, 3);
+    computed: {
+        topThreeProducts() {
+            return this.products.slice(0, 3);
+        },
+        dateNow() {
+            const today = new Date();
+            return today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+        },
+        allProducts() {
+            return this.products.slice(3);
+        },
     },
-    dateNow() {
-      const today = new Date();
-      return today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-    },
-    allProducts() {
-      return this.products.slice(3);
-    },
-  },
 };
 </script>
 
