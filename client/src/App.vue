@@ -308,7 +308,7 @@ export default {
         isLoading: true,
     }),
     async mounted() {
-        const responseBefore = await fetch("http://localhost:3333/api/products");
+        const responseBefore = await fetch("/api/products");
         const response = await responseBefore.json();
         this.products = response.products;
         this.isLoading = false;
