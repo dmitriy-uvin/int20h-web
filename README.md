@@ -16,7 +16,7 @@ App will be available at http://localhost:3333
 ### Docker
 ```
 docker build -t <username>/node-app .
-docker run -p <your-local-port>:3333 -d <username>/node-app
+docker run -p {your-local-port}:3333 -d <username>/node-app
 ```
-App will be available at http://localhost:<your-local-port>
+App will be available at http://localhost:{your-local-port}
 
