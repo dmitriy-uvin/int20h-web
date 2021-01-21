@@ -10,6 +10,12 @@ cd int20h-web
 ### Local
 ```
 ./build.sh
+OR
+cd client
+npm install && npm run dev
+cd ..
+npm install
+npm run start
 ```
 App will be available at http://localhost:3333
 
