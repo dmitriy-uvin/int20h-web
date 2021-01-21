@@ -12,12 +12,6 @@ app.get('/api/products', async (req, res) => {
 
 app.use('/', express.static('./client/dist'));
 
-(async () => {
-    try {
-        app.listen(port, () => {
-            console.log(`Server started, port: ${port}`);
-        });
-    } catch (error) {
-        console.log(error);
-    }
-})();
+app.listen(port, () => {
+    console.log(`Server started, port: ${port}`);
+});
