@@ -1,0 +1,17 @@
+{
+    "name": "client",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "vue-cli-service build",
+        "serve": "vue-cli-service serve"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@vue/cli-service": "^4.5.10",
+        "vue": "^2.6.12",
+        "vue-template-compiler": "^2.6.12"
+    }
+}
