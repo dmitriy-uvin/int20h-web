@@ -244,12 +244,12 @@
                   <div class="shop-thumb__img">
                     <img :src="product.image" class="img-responsive" alt="..." />
                   </div>
-                  <h5 class="shop-thumb__title">{{ product?.title }}</h5>
+                  <h5 class="shop-thumb__title">{{ product.title }}</h5>
                   <p>
                     <b>{{ product.price }}</b> грн.
                   </p>
                   <p v-if="product.producer"><b>Виробник: </b>{{ product.producer }}</p>
-                  <p><b>Ціна за грам (грн): </b>{{ product.pricePerGramm.toFixed(3) }}</p>
+                  <p><b>Ціна за грам: </b>{{ product.pricePerGramm.toFixed(3) }}</p>
                   <p><b>Вага (г): </b>{{ product.weight }}</p>
                 </a>
               </div>
@@ -272,7 +272,7 @@
                     <b>{{ product.price }}</b> грн.
                   </p>
                   <p v-if="product.producer"><b>Виробник: </b>{{ product.producer }}</p>
-                  <p><b>Ціна за грам (грн): </b>{{ product.pricePerGramm.toFixed(3) }}</p>
+                  <p><b>Ціна за грам: </b>{{ product.pricePerGramm.toFixed(3) }}</p>
                   <p><b>Вага (г): </b>{{ product.weight }}</p>
                 </a>
               </div>
