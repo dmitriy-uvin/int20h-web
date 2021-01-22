@@ -12,7 +12,7 @@ cd int20h-web
 ./build.sh
 OR
 cd client
-npm install && npm run dev
+npm install && npm run build
 cd ..
 npm install
 npm run start
