@@ -2,6 +2,9 @@
   <div>
     <Loader v-if="isLoading" />
     <div class="container p-4">
+        <div>
+            <h3>Найкращі ціни на продукти, станом {{ dateNow }}</h3>
+        </div>
       <div class="row">
         <div class="col-sm-4 col-md-3">
           <form>
@@ -142,6 +145,7 @@
                   </p>
                   <p v-if="product.producer"><b>Виробник: </b>{{ product.producer }}</p>
                   <p><b>Ціна за грам: </b>{{ product.pricePerGramm.toFixed(3) }}</p>
+                  <p><b>Вага (г): </b>{{ product.weight }}</p>
                 </a>
               </div>
             </div>
@@ -169,6 +173,7 @@
                   </p>
                   <p v-if="product.producer"><b>Виробник: </b>{{ product.producer }}</p>
                   <p><b>Ціна за грам: </b>{{ product.pricePerGramm.toFixed(3) }}</p>
+                  <p><b>Вага (г): </b>{{ product.weight }}</p>
                 </a>
               </div>
             </div>
@@ -184,6 +189,7 @@
 <script>
 import Loader from "./Loader";
 export default {
+
   name: "App",
   components: {
     Loader,
@@ -242,7 +248,6 @@ export default {
       this.products = this.allProducts
         .slice(3)
         .filter((product) => satisfiesAllFilters(product, this.checkedFilter));
-      console.log(this.products);
     },
     emptyFilter(){
       for(let i in this.checkedFilter){
@@ -266,6 +271,7 @@ export default {
       return 
     }
   },
+
 };
 </script>
 
