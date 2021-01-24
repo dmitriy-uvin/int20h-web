@@ -12,7 +12,7 @@
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="Search products..."
+                      placeholder="Поиск товаров..."
                     />
                     <span class="input-group-btn">
                       <button class="btn btn-primary" type="submit">
@@ -24,10 +24,7 @@
               </div>
             </div>
           </form>
-
-          <!-- Filter -->
           <form class="shop__filter">
-            <!-- Price -->
             <h3 class="headline">
               <span>Price</span>
             </h3>
@@ -101,170 +98,38 @@
             </div>
 
             <!-- Checkboxes -->
-            <h3 class="headline">
-              <span>Brand</span>
-            </h3>
-            <div class="checkbox">
-              <input type="checkbox" value="" id="shop-filter-checkbox_1" checked="" />
-              <label for="shop-filter-checkbox_1">Adidas</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" value="" id="shop-filter-checkbox_2" />
-              <label for="shop-filter-checkbox_2">Calvin Klein</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" value="" id="shop-filter-checkbox_3" />
-              <label for="shop-filter-checkbox_3">Columbia</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" value="" id="shop-filter-checkbox_4" />
-              <label for="shop-filter-checkbox_4">Tommy Hilfiger</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" value="" id="shop-filter-checkbox_5" />
-              <label for="shop-filter-checkbox_5">Not specified</label>
-            </div>
-
-            <!-- Radios -->
-            <h3 class="headline">
-              <span>Material</span>
-            </h3>
-            <div class="radio">
-              <input
-                type="radio"
-                name="shop-filter__radio"
-                id="shop-filter-radio_1"
-                value=""
-                checked=""
-              />
-              <label for="shop-filter-radio_1">100% Cotton</label>
-            </div>
-            <div class="radio">
-              <input
-                type="radio"
-                name="shop-filter__radio"
-                id="shop-filter-radio_2"
-                value=""
-              />
-              <label for="shop-filter-radio_2">Bamboo</label>
-            </div>
-            <div class="radio">
-              <input
-                type="radio"
-                name="shop-filter__radio"
-                id="shop-filter-radio_3"
-                value=""
-              />
-              <label for="shop-filter-radio_3">Leather</label>
-            </div>
-            <div class="radio">
-              <input
-                type="radio"
-                name="shop-filter__radio"
-                id="shop-filter-radio_4"
-                value=""
-              />
-              <label for="shop-filter-radio_4">Polyester</label>
-            </div>
-            <div class="radio">
-              <input
-                type="radio"
-                name="shop-filter__radio"
-                id="shop-filter-radio_5"
-                value=""
-              />
-              <label for="shop-filter-radio_5">Not specified</label>
-            </div>
-
-            <!-- Colors -->
-            <h3 class="headline">
-              <span>Colors</span>
-            </h3>
-            <div class="shop-filter__color">
-              <input
-                type="text"
-                id="shop-filter-color_1"
-                value=""
-                data-input-color="black"
-              />
-              <label for="shop-filter-color_1" style="background-color: black"></label>
-            </div>
-            <div class="shop-filter__color">
-              <input
-                type="text"
-                id="shop-filter-color_2"
-                value=""
-                data-input-color="gray"
-              />
-              <label for="shop-filter-color_2" style="background-color: gray"></label>
-            </div>
-            <div class="shop-filter__color">
-              <input
-                type="text"
-                id="shop-filter-color_3"
-                value=""
-                data-input-color="brown"
-              />
-              <label for="shop-filter-color_3" style="background-color: brown"></label>
-            </div>
-            <div class="shop-filter__color">
-              <input
-                type="text"
-                id="shop-filter-color_4"
-                value=""
-                data-input-color="beige"
-              />
-              <label for="shop-filter-color_4" style="background-color: beige"></label>
-            </div>
-            <div class="shop-filter__color">
-              <input
-                type="text"
-                id="shop-filter-color_5"
-                value=""
-                data-input-color="white"
-              />
-              <label for="shop-filter-color_5" style="background-color: white"></label>
+            <div class="filters" v-for="(options, keyOption) in filters" :key="keyOption">
+              <h3 class="headline">
+                <span>{{ options.name }}</span>
+              </h3>
+              <div
+                class="checkbox"
+                v-for="(param, keyParam) in options.options"
+                :key="keyParam"
+              >
+                <input
+                  @change="filtersProducts"
+                  type="checkbox"
+                  class="checkbox"
+                  :value="param.name"
+                  :id="'shop-filter-checkbox' + param.__ob__.dep.id"
+                  v-model="checkedFilter[options.type]"
+                />
+                <label :for="'shop-filter-checkbox' + param.__ob__.dep.id">{{
+                  param.name
+                }}</label>
+              </div>
             </div>
           </form>
         </div>
 
         <div class="col-sm-8 col-md-9">
-             <h2 class="text-center">ТОП-3 найдешевші</h2>
-          <div class="row" >
-            <div
-              class="col-sm-6 col-md-4"
-              v-for="product in topThreeProducts"
-              :key="product.link"
-            >
-              <div class="shop__thumb" >
-                <a :href="product.link" target="_blank">
-                  <div class="shop-thumb__img">
-                    <img :src="product.image" class="img-responsive" alt="..." />
-                  </div>
-                  <h5 class="shop-thumb__title">{{ product.title }}</h5>
-                  <p>
-                    <b>{{ product.price }}</b> грн.
-                  </p>
-                  <p v-if="product.producer"><b>Виробник: </b>{{ product.producer }}</p>
-                  <p><b>Ціна за грам: </b>{{ product.pricePerGramm.toFixed(3) }}</p>
-                </a>
-              </div>
-              </div>
-          </div>
-
-          <ul class="shop__sorting">
-            <li class="active"><a href="#">Popular</a></li>
-            <li><a href="#">Newest</a></li>
-            <li><a href="#">Bestselling</a></li>
-            <li><a href="#">Price (low)</a></li>
-            <li><a href="#">Price (high)</a></li>
-          </ul>
-
+          <h2 class="text-center">ТОП-3 найдешевші</h2>
           <div class="row">
             <div
               class="col-sm-6 col-md-4"
-              v-for="product in allProducts"
-              :key="product.link"
+              v-for="product in topThreeProducts"
+              :key="product.id"
             >
               <div class="shop__thumb">
                 <a :href="product.link" target="_blank">
@@ -282,14 +147,37 @@
             </div>
           </div>
 
+          <ul class="shop__sorting">
+            <li :class="{active:activeSort}" @click.prevent="sortProducts(false)"><a href="#">От дорогих к дешёвым</a></li>
+            <li :class="{active:!activeSort}" @click.prevent="sortProducts(true)" ><a href="#">От дешёвым к дорогим</a></li>
+          </ul>
+
+          <div class="row">
+            <div
+              class="col-sm-6 col-md-4"
+              v-for="product in products"
+              :key="product.link"
+            >
+              <div class="shop__thumb">
+                <a :href="product.link" target="_blank">
+                  <div class="shop-thumb__img">
+                    <img :src="product.image" class="img-responsive" alt="..." />
+                  </div>
+                  <h5 class="shop-thumb__title">{{ product.title }}</h5>
+                  <p>
+                    <b>{{ product.price }}</b> грн.
+                  </p>
+                  <p v-if="product.producer"><b>Виробник: </b>{{ product.producer }}</p>
+                  <p><b>Ціна за грам: </b>{{ product.pricePerGramm.toFixed(3) }}</p>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="col-sm-8 col-md-9">
-
-        </div>
+        <div class="col-sm-8 col-md-9"></div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -302,43 +190,81 @@ export default {
   },
   data: () => ({
     products: [],
+    filters: [],
+    allProducts: [],
     isLoading: true,
+    topThreeProducts:[],
+    checkedFilter: {},
+    sorted: null,
+    activeSort : false,
   }),
   async mounted() {
-    const responseBefore = await fetch("http://localhost:3333/api/products");
-    const response = await responseBefore.json();
-    this.products = response.products;
-    // this.sortProducts();
-    // this.filterProducts();
-    this.isLoading = false;
+    try {
+      const responseBefore = await fetch("http://localhost:3333/api/products");
+      const response = await responseBefore.json();
+
+      this.topThreeProducts = response.products.slice(0,3); 
+
+      this.allProducts = response.products.slice(3);
+      this.products = response.products.slice(3)
+
+      this.filters = response.filters;
+      this.getAllOptionFilters();
+
+      this.isLoading = false;
+    } catch (err) {
+      console.log(err);
+    }
   },
   methods: {
-    sortProducts() {
-      this.products.sort(function (a, b) {
-        if (Number(a.pricePerGramm) < Number(b.pricePerGramm)) {
-          return -1;
-        }
-        if (Number(a.pricePerGramm) > Number(b.pricePerGramm)) {
-          return 1;
-        }
-        return 0;
+    sortProducts(param) {
+      let curProd = this.emptyFilter()?this.allProducts.slice(3):this.products;
+      this.products = curProd.sort((cur,next)=>{
+        return param?cur.pricePerGramm-next.pricePerGramm:next.pricePerGramm-cur.pricePerGramm;
+      });
+      this.activeSort = !this.activeSort;
+    },
+    getAllOptionFilters() {
+      this.filters.forEach((element) => {
+        this.checkedFilter[element.type] = [];
       });
     },
+    filtersProducts() {
+      function satisfiesFilter(property, filter) {
+        return !filter.length || filter.includes(property);
+      }
+
+      function satisfiesAllFilters(product, filters) {
+        return Object.keys(filters)
+          .map((key) => satisfiesFilter(product[key], filters[key]))
+          .reduce((acc, satisfies) => acc && satisfies, true);
+      }
+      this.products = this.allProducts
+        .slice(3)
+        .filter((product) => satisfiesAllFilters(product, this.checkedFilter));
+      console.log(this.products);
+    },
+    emptyFilter(){
+      for(let i in this.checkedFilter){
+        if(!(this.checkedFilter[i].lenght >0)){
+          return false;
+        }
+      }
+      return true;
+    }
   },
+
   computed: {
     topProduct() {
       return this.products[0];
-    },
-    topThreeProducts() {
-      return this.products.slice(0, 3);
     },
     dateNow() {
       const today = new Date();
       return today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
     },
-    allProducts() {
-      return this.products.slice(3);
-    },
+    allProductsFilterSort(){
+      return 
+    }
   },
 };
 </script>
@@ -366,121 +292,7 @@ export default {
   margin-bottom: 60px;
   color: #777777;
 }
-/* Shop: Slideshow */
-.shop__slideshow {
-  margin-top: -18px;
-  margin-bottom: 60px;
-}
-.shop__slideshow .carousel-inner .item__container {
-  display: table;
-  width: 100%;
-  height: 100%;
-}
-.shop__slideshow .carousel-inner .item-container__inner {
-  display: table-cell;
-  vertical-align: middle;
-}
-.shop__slideshow .carousel-inner .item {
-  width: 100%;
-  height: 600px;
-}
-.shop__slideshow .carousel-inner .item_1 {
-  /* background: url(../img/home_11.jpg) no-repeat center center / cover; */
-}
-.shop__slideshow .carousel-inner .item_2 {
-  /* background: url(../img/home_12.jpg) no-repeat center center / cover; */
-}
-.shop__slideshow .carousel-inner .item_3 {
-  /* background: url(../img/home_14.jpg) no-repeat center center / cover; */
-}
-.shop-slideshow__heading {
-  margin: 0 0 20px 0;
-  font-family: "Questrial", sans-serif;
-  font-size: 46px;
-  line-height: 1.2;
-  color: white;
-}
-.shop-slideshow__subheading {
-  margin-bottom: 30px;
-  font-family: "Questrial", sans-serif;
-  font-size: 20px;
-  line-height: 1.5;
-  color: white;
-}
-.shop-slideshow__btn {
-  border: 2px solid white;
-  border-radius: 0;
-  color: white;
-  font-weight: 600;
-}
-.shop-slideshow__btn:hover,
-.shop-slideshow__btn:focus {
-  color: #333333;
-  background-color: white;
-}
-@media (max-width: 767px) {
-  .shop__slideshow .carousel-inner .item {
-    height: 400px;
-    padding: 0 30px;
-    text-align: center;
-  }
-  .shop-slideshow__heading {
-    font-size: 32px;
-  }
-  .shop-slideshow__subheading {
-    font-size: 16px;
-  }
-}
-/* Carousel controls */
-.shop-slideshow__control {
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  width: 30px;
-  height: 70px;
-  opacity: 0;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  -o-transform: translateY(-50%);
-  transform: translateY(-50%);
-  -webkit-transition: opacity 0.3s;
-  -o-transition: opacity 0.3s;
-  transition: opacity 0.3s;
-}
-.shop-slideshow__control:hover {
-  opacity: 1 !important;
-}
-.shop-slideshow__control {
-  left: auto;
-  right: 10px;
-}
-.shop__slideshow:hover .shop-slideshow__control {
-  opacity: 0.3;
-}
-/* Features */
-.shop-index-features__item {
-  margin-bottom: 40px;
-  text-align: center;
-}
-.shop-index-features__icon {
-  margin-bottom: 20px;
-  width: 90px;
-  height: 100px;
-  /* background: url(../img/hexagon.svg) no-repeat center center / cover; */
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 100px;
-  text-align: center;
-  font-size: 24px;
-}
-.shop-index-features__heading {
-  margin-bottom: 15px;
-}
-.shop-index-features__heading + p {
-  color: #777777;
-}
+
 /* Blog post */
 .shop-index-blog__posts > [class*="col-"] {
   padding-top: 20px;
@@ -886,9 +698,12 @@ export default {
   background-color: #eee;
   text-align: center;
   font-family: "FontAwesome";
+  border: 1px solid #8e8e8e;
 }
+
 .checkbox input[type="checkbox"]:checked + label::before {
   content: "\f00c";
+  border: 1px solid green;
 }
 /* Radios */
 .radio input[type="radio"] {
