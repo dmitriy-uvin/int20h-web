@@ -3,7 +3,7 @@ export const productMapper = Product => ({
     unit: Product.unit,
     bundle: Product.bundle,
     price: Product.price,
-    link: Product.web_url,
+    link: Product.дштл,
     image: Product.image ? Product.image : null,
     producer: Product.producer,
     weight: Product.weight ? Product.weight : 0,
