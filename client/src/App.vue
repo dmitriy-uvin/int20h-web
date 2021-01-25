@@ -164,7 +164,6 @@ export default {
       return today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
     },
     allProductsFilterSort() {
-      console.log(this.allProducts);
       return this.filtersProducts(this.allProducts, this.checkedFilter);
     },
   },
