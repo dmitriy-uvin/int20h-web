@@ -4,68 +4,9 @@
     <div class="container p-4">
       <div class="row">
         <div class="col-sm-4 col-md-3">
-          <form>
-            <div class="well pb-4">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="input-group">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Поиск товаров..."
-                    />
-                    <span class="input-group-btn">
-                      <button class="btn btn-primary" type="submit">
-                        <i class="fa fa-search"></i>
-                      </button>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
+          <Search />
           <form class="shop__filter">
-            <h3 class="headline">
-              <span>Price</span>
-            </h3>
-            <div class="radio">
-              <input
-                type="radio"
-                name="shop-filter__price"
-                id="shop-filter-price_1"
-                value=""
-                checked=""
-              />
-              <label for="shop-filter-price_1">Under $25</label>
-            </div>
-            <div class="radio">
-              <input
-                type="radio"
-                name="shop-filter__price"
-                id="shop-filter-price_2"
-                value=""
-              />
-              <label for="shop-filter-price_2">$25 to $50</label>
-            </div>
-            <div class="radio">
-              <input
-                type="radio"
-                name="shop-filter__price"
-                id="shop-filter-price_3"
-                value=""
-              />
-              <label for="shop-filter-price_3">$50 to $100</label>
-            </div>
-            <div class="radio">
-              <input
-                type="radio"
-                name="shop-filter__price"
-                id="shop-filter-price_4"
-                value="specify"
-              />
-              <label for="shop-filter-price_4">Other (specify)</label>
-            </div>
-            <div class="form-group shop-filter__price">
+            <!-- <div class="form-group shop-filter__price">
               <div class="d-flex">
                 <div class="col-xs-4">
                   <label for="shop-filter-price_from" class="sr-only"></label>
@@ -74,7 +15,7 @@
                     type="number"
                     min="0"
                     class="form-control"
-                    placeholder="From"
+                    placeholder="От"
                     disabled=""
                   />
                 </div>
@@ -85,19 +26,18 @@
                     type="number"
                     min="0"
                     class="form-control"
-                    placeholder="To"
+                    placeholder="До"
                     disabled=""
                   />
                 </div>
                 <div class="col-xs-4">
                   <button type="submit" class="btn btn-block btn-default" disabled="">
-                    Go
+                    Найти
                   </button>
                 </div>
               </div>
-            </div>
+            </div> -->
 
-            <!-- Checkboxes -->
             <div class="filters" v-for="(options, keyOption) in filters" :key="keyOption">
               <h3 class="headline">
                 <span>{{ options.name }}</span>
@@ -108,7 +48,10 @@
                 :key="keyParam"
               >
                 <input
-                  @change="filtersProducts"
+                  @change="function (e) {
+                      filtersProducts(allProducts, checkedFilter);
+                    }
+                  "
                   type="checkbox"
                   class="checkbox"
                   :value="param.name"
@@ -122,7 +65,7 @@
             </div>
           </form>
         </div>
-
+        <!-- <button class="btn" @click="showChecked">Show checkedFilter</button> -->
         <div class="col-sm-8 col-md-9">
           <h2 class="text-center">ТОП-3 найдешевші</h2>
           <div class="row">
@@ -131,46 +74,29 @@
               v-for="product in topThreeProducts"
               :key="product.id"
             >
-              <div class="shop__thumb">
-                <a :href="product.link" target="_blank">
-                  <div class="shop-thumb__img">
-                    <img :src="product.image" class="img-responsive" alt="..." />
-                  </div>
-                  <h5 class="shop-thumb__title">{{ product.title }}</h5>
-                  <p>
-                    <b>{{ product.price }}</b> грн.
-                  </p>
-                  <p v-if="product.producer"><b>Виробник: </b>{{ product.producer }}</p>
-                  <p><b>Ціна за грам: </b>{{ product.pricePerGramm.toFixed(3) }}</p>
-                </a>
-              </div>
+              <Card :product="product"/>
             </div>
           </div>
-
           <ul class="shop__sorting">
-            <li :class="{active:activeSort}" @click.prevent="sortProducts(false)"><a href="#">От дорогих к дешёвым</a></li>
-            <li :class="{active:!activeSort}" @click.prevent="sortProducts(true)" ><a href="#">От дешёвым к дорогим</a></li>
+            <li
+              :class="{ active: val }"
+              @click.prevent="sortProducts(allProducts, key, val)"
+              v-for="(val, key) in sorted"
+              :key="key"
+            >
+              <a href="#">{{ key }}</a>
+            </li>
           </ul>
 
           <div class="row">
+            
             <div
               class="col-sm-6 col-md-4"
-              v-for="product in products"
+              v-for="product in allProductsFilterSort"
               :key="product.link"
             >
-              <div class="shop__thumb">
-                <a :href="product.link" target="_blank">
-                  <div class="shop-thumb__img">
-                    <img :src="product.image" class="img-responsive" alt="..." />
-                  </div>
-                  <h5 class="shop-thumb__title">{{ product.title }}</h5>
-                  <p>
-                    <b>{{ product.price }}</b> грн.
-                  </p>
-                  <p v-if="product.producer"><b>Виробник: </b>{{ product.producer }}</p>
-                  <p><b>Ціна за грам: </b>{{ product.pricePerGramm.toFixed(3) }}</p>
-                </a>
-              </div>
+            <Card :product="product"/>
+
             </div>
           </div>
         </div>
@@ -182,31 +108,39 @@
 </template>
 
 <script>
+import Card from "./components/Card.vue";
+import Search from './components/Search.vue';
 import Loader from "./Loader";
+
+
 export default {
   name: "App",
   components: {
     Loader,
+    Card,
+    Search,
   },
   data: () => ({
     products: [],
     filters: [],
     allProducts: [],
     isLoading: true,
-    topThreeProducts:[],
+    topThreeProducts: [],
     checkedFilter: {},
-    sorted: null,
-    activeSort : false,
+    sorted: {
+      "От дешёвым к дорогим": false,
+      "От дорогих к дешёвым": false,
+    },
+    activeSort: false,
   }),
   async mounted() {
     try {
       const responseBefore = await fetch("http://localhost:3333/api/products");
       const response = await responseBefore.json();
 
-      this.topThreeProducts = response.products.slice(0,3); 
+      this.topThreeProducts = response.products.slice(0, 3);
 
       this.allProducts = response.products.slice(3);
-      this.products = response.products.slice(3)
 
       this.filters = response.filters;
       this.getAllOptionFilters();
@@ -217,41 +151,35 @@ export default {
     }
   },
   methods: {
-    sortProducts(param) {
-      let curProd = this.emptyFilter()?this.allProducts.slice(3):this.products;
-      this.products = curProd.sort((cur,next)=>{
-        return param?cur.pricePerGramm-next.pricePerGramm:next.pricePerGramm-cur.pricePerGramm;
-      });
-      this.activeSort = !this.activeSort;
-    },
     getAllOptionFilters() {
       this.filters.forEach((element) => {
-        this.checkedFilter[element.type] = [];
+        this.$set(this.checkedFilter, element.type, []);
       });
     },
-    filtersProducts() {
+    sortProducts(allProducts, key, val) {
+      for (let i in this.sorted) {
+        this.sorted[i] = false;
+      }
+      this.sorted[key] = !val;
+
+      return allProducts.sort((cur, next) => {
+        return key=="От дешёвым к дорогим"
+          ? cur.pricePerGramm - next.pricePerGramm
+          : next.pricePerGramm - cur.pricePerGramm;
+      });
+    },
+    satisfiesProducts(product, filters) {
       function satisfiesFilter(property, filter) {
         return !filter.length || filter.includes(property);
       }
-
-      function satisfiesAllFilters(product, filters) {
-        return Object.keys(filters)
-          .map((key) => satisfiesFilter(product[key], filters[key]))
-          .reduce((acc, satisfies) => acc && satisfies, true);
-      }
-      this.products = this.allProducts
-        .slice(3)
-        .filter((product) => satisfiesAllFilters(product, this.checkedFilter));
-      console.log(this.products);
+      let result = Object.keys(filters)
+        .map((key) => satisfiesFilter(product[key], filters[key]))
+        .reduce((acc, satisfies) => acc && satisfies, true);
+      return result;
     },
-    emptyFilter(){
-      for(let i in this.checkedFilter){
-        if(!(this.checkedFilter[i].lenght >0)){
-          return false;
-        }
-      }
-      return true;
-    }
+    filtersProducts(allProducts, filters) {
+      return allProducts.filter((elem) => this.satisfiesProducts(elem, filters));
+    },
   },
 
   computed: {
@@ -262,10 +190,11 @@ export default {
       const today = new Date();
       return today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
     },
-    allProductsFilterSort(){
-      return 
-    }
+    allProductsFilterSort() {
+      return this.filtersProducts(this.allProducts, this.checkedFilter);
+    },
   },
+
 };
 </script>
 
@@ -411,48 +340,7 @@ export default {
     width: auto;
   }
 }
-/** Shop: Thumbnails **/
-.shop__thumb {
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  padding: 20px;
-  margin-bottom: 20px;
-  background-color: white;
-  text-align: center;
-  -webkit-transition: border-color 0.1s, -webkit-box-shadow 0.1s;
-  -o-transition: border-color 0.1s, box-shadow 0.1s;
-  transition: border-color 0.1s, box-shadow 0.1s;
-}
-.shop__thumb:hover {
-  border-color: rgba(0, 0, 0, 0.07);
-  -webkit-box-shadow: 0 5px 30px rgba(0, 0, 0, 0.07);
-  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.07);
-}
-.shop__thumb > a {
-  color: #333333;
-}
-.shop__thumb > a:hover {
-  text-decoration: none;
-}
-.shop-thumb__img {
-  position: relative;
-  margin-bottom: 20px;
-  overflow: hidden;
-}
-.shop-thumb__title {
-  font-weight: 600;
-  overflow: hidden;
-  height: 100px;
-  text-overflow: ellipsis;
-}
-.shop-thumb__price {
-  color: #777777;
-}
-.shop-thumb-price_old {
-  text-decoration: line-through;
-}
-.shop-thumb-price_new {
-  color: red;
-}
+
 /** Shop: Item **/
 .shop-item__info {
   padding: 30px;

@@ -5,8 +5,11 @@ const productMapper = require('../mapper/productMapper');
 async function grabJson(queryParameter = 'крупа гречана') {
     const queryParam = encodeURI(queryParameter);
     const productsArray = [];
+    let filters = {};
+    let id = 0;
     for (let index = 0; index < urls.length; index++) {
         const response = await axios.get(urls[index] + queryParam);
+        filters = response.data.filters;
         const products = response.data.results;
         products.map(product => {
             const productObject = productMapper(product);
@@ -16,6 +19,10 @@ async function grabJson(queryParameter = 'крупа гречана') {
                 productObject.weight = 1000;
             }
             productObject.pricePerGramm = productObject.price / productObject.weight;
+            productObject.weight += 'г';
+            
+            id+=1;
+            productObject.id = id;
             productsArray.push(productObject);
         });
     }
@@ -28,7 +35,7 @@ async function grabJson(queryParameter = 'крупа гречана') {
         }
         return 0
     });
-    return productsArray;
+    return {products:productsArray,filters:filters};
 }
 
 module.exports = grabJson;

@@ -6,8 +6,11 @@ module.exports = Product => {
         price: Product.price / 100,
         link: Product.web_url,
         image: Product.img.s200x200,
-        producer: Product.producer.trademark,
+        tm: Product.producer.trademark,
         weight: Product.weight,
-        pricePerGramm: 0
+        quantity:Product.quantity,
+        promotion:Product.discount.status,
+        pricePerGramm: 0,
+        country:Product.country,
     };
 }
