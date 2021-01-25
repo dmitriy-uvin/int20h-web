@@ -4,7 +4,10 @@ const port = process.env.PORT || 3333;
 const grabJson = require('./services/apiService');
 
 app.get('/api/products', async (req, res) => {
-    const products = await grabJson();
+    res.set('Access-Control-Allow-Origin', '*')
+    let products;
+    if(req.query.searchString != "")  products = await grabJson(req.query.searchString);
+    else products = await grabJson();
     res.status(200).json({
         products
     });
