@@ -1,4 +1,4 @@
-const API_PRODUCTS_ENDPOINT = 'http://localhost:3333/api/products';
+const API_PRODUCTS_ENDPOINT = '/api/products';
 
 export default {
     async fetchProducts(searchString) {
