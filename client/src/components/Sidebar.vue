@@ -242,7 +242,6 @@ export default {
     methods: {
         onSubmit() {
             if(this.request.trim()) {
-                console.log(this.request);
                 this.$emit('search', this.request);
             }
         },
