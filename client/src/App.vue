@@ -67,7 +67,7 @@
                 </div>
 
                 <div v-else class="col-sm-8 col-md-9">
-                    <h3>Nothing has been found</h3>
+                    <h3>На жаль, ми не змогли нічого знайти</h3>
                 </div>
             </div>
         </div>
