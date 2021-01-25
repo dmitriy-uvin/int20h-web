@@ -2,7 +2,7 @@ const urls = require('../constants/urls');
 const axios = require('../config/axios-setup');
 const productMapper = require('../mapper/productMapper');
 
-async function grabJson(queryParameter = 'крупа гречана') {
+async function grabProducts(queryParameter = 'крупа гречана') {
     const queryParam = encodeURI(queryParameter);
     const productsArray = [];
     for (let index = 0; index < urls.length; index++) {
@@ -31,4 +31,4 @@ async function grabJson(queryParameter = 'крупа гречана') {
     return productsArray;
 }
 
-module.exports = grabJson;
+module.exports = grabProducts;
