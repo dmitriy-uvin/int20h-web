@@ -26,15 +26,7 @@ async function grabJson(queryParameter = 'крупа гречана') {
             productsArray.push(productObject);
         });
     }
-    productsArray.sort(function (a, b) {
-        if (Number(a.pricePerGramm) < Number(b.pricePerGramm)) {
-            return -1;
-        }
-        if (Number(a.pricePerGramm) > Number(b.pricePerGramm)) {
-            return 1;
-        }
-        return 0
-    });
+    productsArray.sort((a,b)=>a.pricePerGramm - b.pricePerGramm);
     return {products:productsArray,filters:filters};
 }
 

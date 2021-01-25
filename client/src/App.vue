@@ -4,40 +4,8 @@
     <div class="container p-4">
       <div class="row">
         <div class="col-sm-4 col-md-3">
-          <Search />
+          <Search @search="search" @resetSearch="fetchProducts" />
           <form class="shop__filter">
-            <!-- <div class="form-group shop-filter__price">
-              <div class="d-flex">
-                <div class="col-xs-4">
-                  <label for="shop-filter-price_from" class="sr-only"></label>
-                  <input
-                    id="shop-filter-price_from"
-                    type="number"
-                    min="0"
-                    class="form-control"
-                    placeholder="От"
-                    disabled=""
-                  />
-                </div>
-                <div class="col-xs-4">
-                  <label for="shop-filter-price_to" class="sr-only"></label>
-                  <input
-                    id="shop-filter-price_to"
-                    type="number"
-                    min="0"
-                    class="form-control"
-                    placeholder="До"
-                    disabled=""
-                  />
-                </div>
-                <div class="col-xs-4">
-                  <button type="submit" class="btn btn-block btn-default" disabled="">
-                    Найти
-                  </button>
-                </div>
-              </div>
-            </div> -->
-
             <div class="filters" v-for="(options, keyOption) in filters" :key="keyOption">
               <h3 class="headline">
                 <span>{{ options.name }}</span>
@@ -65,7 +33,6 @@
             </div>
           </form>
         </div>
-        <!-- <button class="btn" @click="showChecked">Show checkedFilter</button> -->
         <div class="col-sm-8 col-md-9">
           <h2 class="text-center">ТОП-3 найдешевші</h2>
           <div class="row">
@@ -74,7 +41,7 @@
               v-for="product in topThreeProducts"
               :key="product.id"
             >
-              <Card :product="product"/>
+              <Card :product="product" />
             </div>
           </div>
           <ul class="shop__sorting">
@@ -89,14 +56,12 @@
           </ul>
 
           <div class="row">
-            
             <div
               class="col-sm-6 col-md-4"
               v-for="product in allProductsFilterSort"
               :key="product.link"
             >
-            <Card :product="product"/>
-
+              <Card :product="product" />
             </div>
           </div>
         </div>
@@ -109,9 +74,10 @@
 
 <script>
 import Card from "./components/Card.vue";
-import Search from './components/Search.vue';
+import Search from "./components/Search.vue";
 import Loader from "./Loader";
-
+import productsService from "./services/productsService";
+import { productMapper } from "./services/mapper";
 
 export default {
   name: "App",
@@ -127,6 +93,7 @@ export default {
     isLoading: true,
     topThreeProducts: [],
     checkedFilter: {},
+    param: "",
     sorted: {
       "От дешёвым к дорогим": false,
       "От дорогих к дешёвым": false,
@@ -134,21 +101,7 @@ export default {
     activeSort: false,
   }),
   async mounted() {
-    try {
-      const responseBefore = await fetch("http://localhost:3333/api/products");
-      const response = await responseBefore.json();
-
-      this.topThreeProducts = response.products.slice(0, 3);
-
-      this.allProducts = response.products.slice(3);
-
-      this.filters = response.filters;
-      this.getAllOptionFilters();
-
-      this.isLoading = false;
-    } catch (err) {
-      console.log(err);
-    }
+      await this.fetchProducts();
   },
   methods: {
     getAllOptionFilters() {
@@ -163,7 +116,7 @@ export default {
       this.sorted[key] = !val;
 
       return allProducts.sort((cur, next) => {
-        return key=="От дешёвым к дорогим"
+        return key == "От дешёвым к дорогим"
           ? cur.pricePerGramm - next.pricePerGramm
           : next.pricePerGramm - cur.pricePerGramm;
       });
@@ -177,8 +130,28 @@ export default {
         .reduce((acc, satisfies) => acc && satisfies, true);
       return result;
     },
+
     filtersProducts(allProducts, filters) {
       return allProducts.filter((elem) => this.satisfiesProducts(elem, filters));
+    },
+    async fetchProducts(searchString = "") {
+      try {
+      this.isLoading = true;
+      const response = await productsService.fetchProducts(searchString);
+      
+      this.allProducts = response.products.map(productMapper);
+      this.topThreeProducts = this.allProducts.slice(0, 3);
+      this.allProducts = this.allProducts.slice(3);
+      this.filters = response.filters;
+      this.getAllOptionFilters();
+      this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+        console.log(error);
+      }
+    },
+    async search(param) {
+      await this.fetchProducts(param);
     },
   },
 
@@ -191,243 +164,24 @@ export default {
       return today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
     },
     allProductsFilterSort() {
+      console.log(this.allProducts);
       return this.filtersProducts(this.allProducts, this.checkedFilter);
     },
   },
-
 };
 </script>
 
 <style scoped>
-.shop-index__section {
-  position: relative;
-  margin-bottom: 60px;
-}
-.shop-index__section.alt {
-  background-color: #f5f5f5;
-  padding-top: 60px;
-  padding-bottom: 60px;
-  border-width: 1px 0 1px 0;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.05);
-}
-.shop-index__heading {
-  margin-top: 0;
-  margin-bottom: 60px;
-  font-family: "Questrial", sans-serif;
-}
-.shop-index__heading + p {
-  margin-top: -50px;
-  margin-bottom: 60px;
-  color: #777777;
-}
 
-/* Blog post */
-.shop-index-blog__posts > [class*="col-"] {
-  padding-top: 20px;
-  padding-bottom: 20px;
-  border-right: 1px solid rgba(0, 0, 0, 0.05);
-}
-.shop-index-blog__posts > [class*="col-"]:last-child {
-  border-right: 0;
-}
-.shop-index-blog__post {
-  width: 80%;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-.shop-index-blog__img {
-  position: relative;
-  float: left;
-  margin-right: 30px;
-  margin-bottom: 20px;
-  width: 90px;
-  height: 100px;
-  overflow: hidden;
-}
-.shop-index-blog__img:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-.shop-index-blog__img > img {
-  height: 100%;
-  width: auto;
-}
-.shop-index-blog__body {
-  overflow: hidden;
-}
-.shop-index-blog__heading {
-  position: relative;
-  margin-top: 0;
-  margin-bottom: 30px;
-  line-height: 1.5;
-}
-.shop-index-blog__heading:after {
-  content: "";
-  position: absolute;
-  bottom: -15px;
-  left: 0;
-  width: 30px;
-  height: 2px;
-  background-color: rgba(0, 0, 0, 0.1);
-}
-.shop-index-blog__content {
-  margin-bottom: 20px;
-  color: #777777;
-}
-@media (max-width: 991px) {
-  .shop-index-blog__img {
-    float: none;
-    margin-right: 0;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .shop-index-blog__heading {
-    text-align: center;
-  }
-  .shop-index-blog__heading:after {
-    left: 50%;
-    margin-left: -15px;
-  }
-}
-@media (max-width: 767px) {
-  .shop-index-blog__posts > [class*="col-"] {
-    padding-top: 0;
-    padding-bottom: 60px;
-    border-right: 0;
-  }
-  .shop-index-blog__posts > [class*="col-"]:last-child {
-    padding-bottom: 0;
-  }
-  .shop-index-blog__post {
-    width: 100%;
-  }
-}
-/* Newsletter */
-.shop-index__newsletter {
-  padding-bottom: 20px;
-}
-.shop-index__newsletter .shop-index__heading {
-  margin-bottom: 20px;
-  line-height: 42px;
-  text-align: center;
-}
-.shop-index__newsletter input[type="email"] {
-  height: 42px;
-  padding: 11px 12px;
-}
-.shop-index__newsletter button[type="submit"] {
-  padding: 11px 30px;
-  width: 100%;
-}
-@media (min-width: 768px) {
-  .shop-index__newsletter .shop-index__heading {
-    margin-bottom: 0px;
-    text-align: right;
-  }
-  .shop-index__newsletter input[type="email"] {
-    border-radius: 21px 0 0 21px;
-  }
-  .shop-index__newsletter button[type="submit"] {
-    margin-left: -3px;
-    border-radius: 0 21px 21px 0;
-    width: auto;
-  }
-}
-
-/** Shop: Item **/
-.shop-item__info {
-  padding: 30px;
-  margin-bottom: 40px;
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-.shop-item-cart__title {
-  margin-bottom: 20px;
-  line-height: 1.3;
-}
-.shop-item-cart__price {
-  font-size: 28px;
-  font-weight: 400;
-  color: #f7c41f;
-}
-.shop-item__intro {
-  color: #777777;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-}
-.shop-item__add button[type="submit"] {
-  padding: 15px 20px;
-}
-.shop-item__img {
-  margin-bottom: 40px;
-}
-.shop-item-img__main {
-  width: -webkit-calc(100% - 110px);
-  width: calc(100% - 110px);
-  height: auto;
-  float: left;
-}
-.shop-item-img__aside {
-  width: 100px;
-  height: auto;
-  float: left;
-}
-.shop-item-img__aside > img {
-  cursor: pointer;
-  margin-bottom: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  opacity: 0.5;
-}
-.shop-item-img__aside > img:hover,
-.shop-item-img__aside > img.active {
-  border-color: rgba(0, 0, 0, 0.05);
-  opacity: 1;
-}
-@media (max-width: 767px) {
-  .shop-item-img__main {
-    width: -webkit-calc(100% - 60px);
-    width: calc(100% - 60px);
-  }
-  .shop-item-img__aside {
-    width: 50px;
-  }
-}
-/** Shop: Filter **/
 .shop__filter {
   margin-bottom: 40px;
 }
-/* Shop filter: Pricing */
 .shop-filter__price {
   padding: 15px;
 }
 .shop-filter__price [class*="col-"] {
   padding: 2px;
 }
-/* Shop filter: Colors */
-.shop-filter__color {
-  display: inline-block;
-  margin: 0 2px 2px 0;
-}
-.shop-filter__color input[type="text"] {
-  display: none;
-}
-.shop-filter__color label {
-  width: 30px;
-  height: 30px;
-  background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
-  cursor: pointer;
-}
-/** Shop: Sorting **/
 .shop__sorting {
   list-style: none;
   padding-left: 0;
@@ -593,83 +347,6 @@ export default {
   content: "\f00c";
   border: 1px solid green;
 }
-/* Radios */
-.radio input[type="radio"] {
-  display: none;
-}
-.radio label {
-  padding-left: 0;
-}
-.radio label:before {
-  content: "";
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 15px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 10px solid #eee;
-  background-color: #333333;
-}
-.radio input[type="radio"]:checked + label:before {
-  border-width: 7px;
-}
-/* Quantity */
-.input_qty {
-  margin-bottom: 10px;
-}
-.input_qty input[type="text"] {
-  display: none;
-}
-.input_qty label {
-  width: 100%;
-  height: 40px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  line-height: 40px;
-  text-align: center;
-}
-.input_qty label > span:not(.output) {
-  width: 40px;
-  height: 40px;
-  float: left;
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-.input_qty label > span:not(.output):last-child {
-  float: right;
-  border-right: 0;
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
-}
-.input_qty label > span:not(.output):hover {
-  background-color: rgba(0, 0, 0, 0.02);
-}
-.input_qty label > output {
-  display: inline-block;
-  line-height: inherit;
-  padding: 0;
-}
-.input_qty_sm label {
-  width: 80px;
-  height: 20px;
-  border: 0;
-  line-height: 20px;
-  color: #ccc;
-}
-.input_qty_sm label > span:not(.output) {
-  width: 20px;
-  height: 20px;
-  border: 0 !important;
-}
-.input_qty_sm label > span:not(.output):hover {
-  background-color: transparent;
-  color: #333333;
-}
-.input_qty_sm label output {
-  color: #ccc;
-  font-weight: 600;
-}
+
+
 </style>

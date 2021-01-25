@@ -6,10 +6,11 @@ const grabJson = require('./services/apiService');
 app.get('/api/products', async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     try{
-        const result = await grabJson();
+        const result = await grabJson(req.query.searchString?req.query.searchString:undefined);
         res.status(200).json(result);
     }
     catch(error){
+        console.log(error);
         res.status(500).json(error);
     }
 });
