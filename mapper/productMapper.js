@@ -3,7 +3,7 @@ module.exports = Product => ({
     unit: Product.unit,
     bundle: Product.bundle,
     price: Product.price / 100,
-    link: Product.web_url,
+    link: Product.link,
     image: Product.img.s200x200,
     producer: Product.producer.trademark,
     weight: Product.weight,
