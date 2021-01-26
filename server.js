@@ -1,19 +1,16 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3333;
-const grabProducts = require('./services/apiService');
+const grabJson = require('./services/apiService');
 
 app.get('/api/products', async (req, res) => {
-    let products;
-    if(req.query.searchString) {
-        products = await grabProducts(req.query.searchString);
-    } else {
-        products = await grabProducts();
+    try{
+        const result = await grabJson(req.query.searchString ? req.query.searchString : undefined);
+        res.status(200).json(result);
+    }  catch(error){
+        console.log(error);
+        res.status(500).json(error);
     }
-
-    res.status(200).json({
-        products
-    });
 });
 
 app.use('/', express.static('./client/dist'));

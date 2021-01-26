@@ -1,11 +1,15 @@
-export const productMapper = Product => ({
-    title: Product.title,
-    unit: Product.unit,
-    bundle: Product.bundle,
-    price: Product.price,
-    link: Product.link,
-    image: Product.image ? Product.image : null,
-    producer: Product.producer,
-    weight: Product.weight ? Product.weight : 0,
-    pricePerGramm: Product.pricePerGramm ? Product.pricePerGramm : 0
-});
+export const productMapper = Product => {
+    return {
+        title: Product.title,
+        unit: Product.unit,
+        bundle: Product.bundle,
+        price: Product.price / 100,
+        link: Product.link,
+        image: Product.image ? Product.image : null,
+        tm: Product.tm,
+        weight: Product.weight + 'г',
+        pricePerGramm: Product.pricePerGramm / 100,
+        quantity: Product.quantity,
+        country: Product.country,
+    }
+};

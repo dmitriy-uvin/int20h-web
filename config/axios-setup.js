@@ -1,11 +1,11 @@
 const axios = require('axios');
 
 axios.interceptors.request.use(
-    function (config) {
-        config.headers['Accept-Language']='uk';
+    config => {
+        config.headers['Accept-Language']= 'uk';
         return config;
     },
-    function (error) {
+    error => {
         return Promise.reject(error);
     }
 );
