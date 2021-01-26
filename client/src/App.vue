@@ -139,7 +139,7 @@ export default {
             try {
                 this.isLoading = true;
                 const response = await productsService.fetchProducts(searchString);
-
+                this.products = response.products;
                 this.allProducts = response.products.map(productMapper);
                 this.topThreeProducts = this.allProducts.slice(0, 3);
                 this.allProducts = this.allProducts.slice(3);
@@ -159,13 +159,6 @@ export default {
     },
 
     computed: {
-        topProduct() {
-            return this.products[0];
-        },
-        dateNow() {
-            const today = new Date();
-            return today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-        },
         allProductsFilterSort() {
             return this.filtersProducts(this.allProducts, this.checkedFilter);
         },
