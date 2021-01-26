@@ -26,5 +26,5 @@ docker run -p {your-local-port}:3333 -d <username>/node-app
 ```
 App will be available at http://localhost:{your-local-port}
 
-### Heroku apps
+### Heroku app
 [Int20h Web](https://int20h-web-docker.herokuapp.com/)
