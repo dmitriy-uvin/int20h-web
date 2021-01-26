@@ -73,9 +73,9 @@
 </template>
 
 <script>
-import Card from "./components/Card.vue";
-import Search from "./components/Search.vue";
-import Loader from "./Loader";
+import Card from "./components/Card";
+import Search from "./components/Search";
+import Loader from "./components/Loader";
 import productsService from "./services/productsService";
 import { productMapper } from "./services/mapper";
 
