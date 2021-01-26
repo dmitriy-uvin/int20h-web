@@ -19,15 +19,17 @@ async function grabJson(queryParameter = 'крупа гречана') {
                 productObject.weight = 1000;
             }
             productObject.pricePerGramm = productObject.price / productObject.weight;
-            productObject.weight += 'г';
             
-            id+=1;
+            id += 1;
             productObject.id = id;
             productsArray.push(productObject);
         });
     }
-    productsArray.sort((a,b)=>a.pricePerGramm - b.pricePerGramm);
-    return {products:productsArray,filters:filters};
+    productsArray.sort((a, b) => a.pricePerGramm - b.pricePerGramm);
+    return {
+        products: productsArray,
+        filters: filters
+    };
 }
 
 module.exports = grabJson;

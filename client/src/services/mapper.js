@@ -7,9 +7,9 @@ export const productMapper = Product => {
         link: Product.link,
         image: Product.image ? Product.image : null,
         tm: Product.tm,
-        weight: Product.weight,
-        pricePerGramm: Product.pricePerGramm/100,
-        quantity:Product.quantity,
-        country:Product.country,
+        weight: Product.weight + 'г',
+        pricePerGramm: Product.pricePerGramm / 100,
+        quantity: Product.quantity,
+        country: Product.country,
     }
 };
