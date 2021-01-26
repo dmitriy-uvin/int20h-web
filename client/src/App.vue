@@ -33,7 +33,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-sm-8 col-md-9">
+                <div class="col-sm-8 col-md-9" v-if="products.length">
                     <h2 class="text-center">ТОП-3 найдешевші</h2>
                     <div class="row">
                         <div
@@ -66,7 +66,9 @@
                     </div>
                 </div>
 
-                <div class="col-sm-8 col-md-9"></div>
+                <div class="col-sm-8 col-md-9 text-center" v-else>
+                    <h1>Товарів не знайдено.</h1>
+                </div>
             </div>
         </div>
     </div>
